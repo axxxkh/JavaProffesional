@@ -3,8 +3,8 @@ package LessonTwo.TaskTwo;
 import java.util.*;
 
 public class MyCollection {
-    List<String> myCollection = new LinkedList<>();
-    Scanner input = new Scanner(System.in);
+    public List<String> myCollection = new LinkedList<>();
+    public Scanner input = new Scanner(System.in);
     char[] charArray;
 
     public void doubleValues() {

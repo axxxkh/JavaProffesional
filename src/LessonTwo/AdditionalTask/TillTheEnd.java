@@ -4,7 +4,7 @@ import java.util.*;
 
 public class TillTheEnd {
     public List<String> list = new ArrayList<>();
-    Scanner input = new Scanner(System.in);
+    public Scanner input = new Scanner(System.in);
 
     public void printAll() {
         // о, тут потихеньку зявляеться розуміння. хоча може і не вірно реалізовано
