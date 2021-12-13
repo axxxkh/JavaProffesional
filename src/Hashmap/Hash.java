@@ -2,16 +2,26 @@ package Hashmap;
 
 public class Hash<TKey, TValue> implements Hashable<TKey, TValue> {
     private final int INITIAL_SIZE = 16;
-    private int size;
     private Node<TKey, TValue>[] array;
-    private int loadLevel;
+    private int size;
 
     public Hash() {
         array = new Node[INITIAL_SIZE];
     }
 
+    // метод який вертає bucket до якого відповідно до hashcode привязаний ключ-значення
     private int bucketIndex(TKey key) {
-        return (key.hashCode() / Integer.MAX_VALUE) * (INITIAL_SIZE - 1);
+        int h;
+        return (key == null) ? 0 : (key.hashCode() >>> 16) % array.length;
+    }
+
+    //так як часто перевірялось то вирішив вивести в окремий метод
+    // тру якщо ячейка масиву налл. тепер потрібно походу буде переробити на налл
+    private boolean bucketCheck(TKey key) {
+        if (array[bucketIndex(key)] != null) {
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -20,91 +30,81 @@ public class Hash<TKey, TValue> implements Hashable<TKey, TValue> {
     }
 
     @Override
-    public boolean equals() {
-        return false;
-    }
-
-    @Override
     public void put(TKey key, TValue value) {
-        if (array[bucketIndex(key)] == null) {
+        if (!bucketCheck(key)) {
             array[bucketIndex(key)] = new Node<>(key, value, key.hashCode());
-            size++;
+            ++size;
         } else {
-            Node node = nodeSearch(key);
+            Node<TKey, TValue> node = nodeSearch(key);
             if (node != null) {
-                node.value = value;
+                node.setValue(value);
             } else {
                 Node<TKey, TValue> lastNode = nodeLast(key);
-                lastNode.next = new Node(key, value, key.hashCode());
-                size++;
+                lastNode.setNext(new Node<>(key, value, key.hashCode()));
+                ++size;
             }
         }
+        resize();
     }
 
-    private Node nodeNext(Node node) {
-        if (node.next != null) {
-            return node.next;
+    // повертає наступну ноду
+    private Node<TKey, TValue> nodeNext(Node<TKey, TValue> node) {
+        if (node.getNext() != null) {
+            return node.getNext();
         }
         return null;
     }
 
-    private Node nodeLast(TKey key) {
-        Node node = array[bucketIndex(key)];
-        do {
-            if (node.next == null) {
-                return node;
-            }
-            node = node.next;
-        } while (node.next != null);
+    //повертає останню ноду в бакеті
+    private Node<TKey, TValue> nodeLast(TKey key) {
+        Node<TKey, TValue> node = array[bucketIndex(key)];
+        while (node.getNext() != null) {
+            node = nodeNext(node);
+        }
         return node;
     }
 
-    private Node nodeSearch(TKey key) {
-        if (array[bucketIndex(key)] != null) {
-            Node node = array[bucketIndex(key)];
-            while (node.next != null) {
-                if (node.key == key) {
+    //    шукає значення поміж нод у визначенному бакеті
+    private Node<TKey, TValue> nodeSearch(TKey key) {
+        if (bucketCheck(key)) {
+            Node<TKey, TValue> node = array[bucketIndex(key)];
+            while (node.getNext() != null) {
+                if (node.getKey().equals(key)) {
                     return node;
                 }
-                node = node.next;
+                node = node.getNext();
             }
         }
         return null;
-    }
-
-    @Override
-    public boolean contains(TKey key) {
-        int bucket = bucketIndex(key);
-        if (array[bucket] != null && nodeSearch(key) != null) {
-            return true;
-        }
-        return false;
     }
 
     @Override
     public TValue get(TKey key) {
-        int sfs = bucketIndex(key);
-        if (array[bucketIndex(key)] != null) {
-            Node<TKey, TValue> node = nodeSearch(key);
-            if (node != null) {
-                return node.value;
+        Node<TKey, TValue> node = array[bucketIndex(key)];
+        while (node.getNext() != null) {
+            if (node.getKey().equals(key)) {
+                return node.getValue();
             }
+            node = nodeNext(node);
         }
-        System.out.println("no such element");
         return null;
     }
 
     private void resize() {
-        Node<TKey, TValue>[] tempArray = array;
-        Node<TKey, TValue>[] newArray = new Node[(int) (array.length * 1.5)];
-        array = newArray;
+        if (size > array.length * 7) {
+            size = 0;
+            Node<TKey, TValue>[] tempArray = array;
+            array = new Node[(array.length * 2)];
+            Node<TKey, TValue> tempNode;
 
-        for (int i = 0; i < tempArray.length; i++) {
-            if (tempArray[i] != null) {
-                Node node = tempArray[i];
-                put((TKey) node.key, (TValue) node.value);
-                while (node.next != null) {
-                    node = nodeNext(node);
+            for (Node<TKey, TValue> node : tempArray) {
+                tempNode = node;
+                if (tempNode != null) {
+                    put(tempNode.getKey(), tempNode.getValue());
+                    while (tempNode.getNext() != null) {
+                        tempNode = nodeNext(tempNode);
+                        put(tempNode.getKey(), tempNode.getValue());
+                    }
                 }
             }
         }
@@ -113,19 +113,53 @@ public class Hash<TKey, TValue> implements Hashable<TKey, TValue> {
     @Override
     public String toString() {
         StringBuilder string = new StringBuilder();
-
-        for (int i = 0; i < array.length; i++) {
-            if (array[i] != null) {
-                Node node = array[i];
-                string.append(node.value);
+        int lineDivider = 0;
+        for (Node<TKey, TValue> valueNode : array) {
+            if (valueNode != null) {
+                Node<TKey, TValue> node = valueNode;
+                string.append(node.getValue());
                 string.append(" ,");
-                while (node.next != null) {
+                while (node.getNext() != null) {
                     node = nodeNext(node);
-                    string.append(node.value);
+                    string.append(node.getKey());
+                    string.append(" - ");
+                    string.append(node.getValue());
                     string.append(" ,");
+                    ++lineDivider;
+
+                    if (lineDivider > 15) {
+                        string.append("\n");
+                        lineDivider = 0;
+                    }
                 }
             }
         }
         return string.toString();
     }
+
+    public String getKeySet() {
+        StringBuilder string = new StringBuilder();
+        int lineDivider = 0;
+        for (Node<TKey, TValue> valueNode : array) {
+            if (valueNode != null) {
+                Node<TKey, TValue> node = valueNode;
+                string.append(node.getKey());
+                string.append(", ");
+                while (node.getNext() != null) {
+                    node = nodeNext(node);
+                    string.append(node.getKey());
+                    string.append(", ");
+                    ++lineDivider;
+
+                    if (lineDivider > 15) {
+                        string.append("\n");
+                        lineDivider = 0;
+                    }
+                }
+            }
+        }
+        return string.toString();
+    }
+
+
 }
