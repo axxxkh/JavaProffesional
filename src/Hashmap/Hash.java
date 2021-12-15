@@ -2,6 +2,7 @@ package Hashmap;
 
 public class Hash<TKey, TValue> implements Hashable<TKey, TValue> {
     private final int INITIAL_SIZE = 16;
+    private final double INCREASE = 1.5;
     private Node<TKey, TValue>[] array;
     private int size;
 
@@ -11,7 +12,6 @@ public class Hash<TKey, TValue> implements Hashable<TKey, TValue> {
 
     // метод який вертає bucket до якого відповідно до hashcode привязаний ключ-значення
     private int bucketIndex(TKey key) {
-        int h;
         return (key == null) ? 0 : (key.hashCode() >>> 16) % array.length;
     }
 
@@ -66,14 +66,12 @@ public class Hash<TKey, TValue> implements Hashable<TKey, TValue> {
 
     //    шукає значення поміж нод у визначенному бакеті
     private Node<TKey, TValue> nodeSearch(TKey key) {
-        if (bucketCheck(key)) {
-            Node<TKey, TValue> node = array[bucketIndex(key)];
-            while (node.getNext() != null) {
-                if (node.getKey().equals(key)) {
-                    return node;
-                }
-                node = node.getNext();
+        Node<TKey, TValue> node = array[bucketIndex(key)];
+        while (node.getNext() != null) {
+            if (node.getKey().equals(key)) {
+                return node;
             }
+            node = node.getNext();
         }
         return null;
     }
@@ -94,7 +92,7 @@ public class Hash<TKey, TValue> implements Hashable<TKey, TValue> {
         if (size > array.length * 7) {
             size = 0;
             Node<TKey, TValue>[] tempArray = array;
-            array = new Node[(array.length * 2)];
+            array = new Node[(int) (array.length * INCREASE)];
             Node<TKey, TValue> tempNode;
 
             for (Node<TKey, TValue> node : tempArray) {
@@ -119,6 +117,7 @@ public class Hash<TKey, TValue> implements Hashable<TKey, TValue> {
                 Node<TKey, TValue> node = valueNode;
                 string.append(node.getValue());
                 string.append(" ,");
+                string.append(node.getValue());
                 while (node.getNext() != null) {
                     node = nodeNext(node);
                     string.append(node.getKey());
@@ -161,5 +160,27 @@ public class Hash<TKey, TValue> implements Hashable<TKey, TValue> {
         return string.toString();
     }
 
+    public String getValues() {
+        StringBuilder string = new StringBuilder();
+        int lineDivider = 0;
+        for (Node<TKey, TValue> valueNode : array) {
+            if (valueNode != null) {
+                Node<TKey, TValue> node = valueNode;
+                string.append(node.getValue());
+                string.append(", ");
+                while (node.getNext() != null) {
+                    node = nodeNext(node);
+                    string.append(node.getValue());
+                    string.append(", ");
+                    ++lineDivider;
 
+                    if (lineDivider > 15) {
+                        string.append("\n");
+                        lineDivider = 0;
+                    }
+                }
+            }
+        }
+        return string.toString();
+    }
 }

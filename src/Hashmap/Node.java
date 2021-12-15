@@ -4,7 +4,7 @@ public class Node<TKey, TValue> {
     private TKey key;
     private TValue value;
     private int hash;
-    public Node next;
+    private Node next;
 
 
     public TKey getKey() {
