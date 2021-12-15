@@ -18,10 +18,7 @@ public class Hash<TKey, TValue> implements Hashable<TKey, TValue> {
     //так як часто перевірялось то вирішив вивести в окремий метод
     // тру якщо ячейка масиву налл. тепер потрібно походу буде переробити на налл
     private boolean bucketCheck(TKey key) {
-        if (array[bucketIndex(key)] != null) {
-            return true;
-        }
-        return false;
+        return array[bucketIndex(key)] != null;
     }
 
     @Override

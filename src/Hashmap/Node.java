@@ -4,18 +4,18 @@ public class Node<TKey, TValue> {
     private TKey key;
     private TValue value;
     private int hash;
-    private Node next;
+    private Node<TKey, TValue> next;
 
 
     public TKey getKey() {
         return key;
     }
 
-    public Node getNext() {
+    public Node<TKey, TValue> getNext() {
         return next;
     }
 
-    public void setNext(Node next) {
+    public void setNext(Node<TKey, TValue> next) {
         this.next = next;
     }
 
