@@ -37,10 +37,10 @@ JavaProffesional.iml
 # .idea/modules
  *.iml
  *.ipr
-/JavaEssential.iml
 # CMake
+JavaProffesional.iml
+/JavaProffesional.iml
 cmake-build-*/
-JavaEssential.iml
 # Mongo Explorer plugin
 .idea/**/mongoSettings.xml
 
