@@ -1,10 +1,10 @@
 package Hashmap;
 
-public class Node<TKey, TValue> {
+class Node<TKey, TValue> {
     private TKey key;
     private TValue value;
     private int hash;
-    private Node<TKey, TValue> next;
+    public Node<TKey, TValue> next;
 
 
     public TKey getKey() {
