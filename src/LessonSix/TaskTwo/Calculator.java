@@ -27,7 +27,6 @@ public class Calculator {
      * @return result of the operation
      */
     public int mul(int firstNumber, int secondNumber) {
-        System.out.println("mul" + firstNumber + secondNumber);
         return firstNumber * secondNumber;
     }
 
@@ -38,7 +37,6 @@ public class Calculator {
      */
     @CalculationAnnotation(firstNumber = 1, secondNumber = 0)
     public int div(int firstNumber, int secondNumber) {
-        System.out.println("div" + firstNumber + secondNumber);
         return firstNumber / secondNumber;
     }
 
@@ -51,7 +49,6 @@ public class Calculator {
             firstNumber = 3,
             secondNumber = 4)
     public int sum(int firstNumber, int secondNumber) {
-        System.out.println("sum" + firstNumber + secondNumber);
         return firstNumber + secondNumber;
     }
 
@@ -64,7 +61,6 @@ public class Calculator {
             firstNumber = 5,
             secondNumber = 6)
     public int minus(int firstNumber, int secondNumber) {
-        System.out.println("minus" + firstNumber + secondNumber);
         return firstNumber - secondNumber;
     }
 
