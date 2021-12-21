@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<adresses>
+    <adress>
+        <city size="big">Kiev</city>
+        <street>Big Street</street>
+        <house>11/A</house>
+    </adress>
+    <adress>
+        <city size="medium">Vinnitsya</city>
+        <street>Some Street</street>
+        <house>24</house>
+    </adress>
+</adresses>
