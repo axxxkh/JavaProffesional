@@ -36,7 +36,7 @@ public class Hash<TKey, TValue> implements Hashable<TKey, TValue> {
             ++size;
         } else {
             Node<TKey, TValue> node = nodeSearch(key);
-            if (node != null) {
+            if (node != null && node.getKey().equals(key)) {
                 node.setValue(value);
             } else {
                 Node<TKey, TValue> lastNode = nodeLast(key);
@@ -72,11 +72,7 @@ public class Hash<TKey, TValue> implements Hashable<TKey, TValue> {
 
     @Override
     public TValue get(TKey key) {
-        Node<TKey, TValue> node = nodeSearch(key);
-        if (node != null) {
-            return nodeSearch(key).getValue();
-        }
-        return null;
+        return nodeSearch(key).getValue();
     }
 
     private void resize() {
@@ -126,34 +122,33 @@ public class Hash<TKey, TValue> implements Hashable<TKey, TValue> {
     }
 
     public Set<TKey> getKeySet() {
-        Set<TKey> set = new HashSet<>();
+        Set<TKey> resultSet = new HashSet<>();
         int lineDivider = 0;
         for (Node<TKey, TValue> valueNode : array) {
             if (valueNode != null) {
                 Node<TKey, TValue> node = valueNode;
-                set.add(node.getKey());
+                resultSet.add(node.getKey());
                 while (node.getNext() != null) {
                     node = node.getNext();
-                    set.add(node.getKey());
+                    resultSet.add(node.getKey());
                 }
             }
         }
-        return set;
+        return resultSet;
     }
 
     public Set<TValue> getValues() {
-        Set<TValue> set = new HashSet<>();
-        int lineDivider = 0;
+        Set<TValue> resultSet = new HashSet<>();
         for (Node<TKey, TValue> valueNode : array) {
             if (valueNode != null) {
                 Node<TKey, TValue> node = valueNode;
-                set.add(node.getValue());
+                resultSet.add(node.getValue());
                 while (node.getNext() != null) {
                     node = node.getNext();
-                    set.add(node.getValue());
+                    resultSet.add(node.getValue());
                 }
             }
         }
-        return set;
+        return resultSet;
     }
 }
