@@ -8,7 +8,7 @@
 JavaProffesional.iml
 # AWS User-specific
 .idea/**/aws.xml
-
+JavaProffesional2.iml
 # Generated files
 .idea/**/contentModel.xml
 
@@ -70,3 +70,11 @@ fabric.properties
 
 # Android studio 3.1+ serialized cache file
 .idea/caches/build_file_checksums.ser
+/target/classes/LessonSeven/AdditionalTask/Animal.class
+/target/classes/LessonSeven/AdditionalTask/Main.class
+/target/classes/LessonSeven/TaskFour/Adress.class
+/target/classes/LessonSeven/TaskFour/Main.class
+/target/classes/LessonSeven/TaskThree/Adress.class
+/target/classes/LessonSeven/TaskThree/MySAXParser$1.class
+/target/classes/LessonSeven/TaskThree/MySAXParser.class
+/target/classes/LessonSeven/TaskTwo/Main.class
