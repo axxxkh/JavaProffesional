@@ -24,7 +24,7 @@ public class Book {
         Function<Book, String> getInfo = b -> "Author is " + b.author + " book - " + b.name + " price - " + b.price;
 
         listBook.stream()
-                .map(b -> getInfo.apply(b))
+                .map(getInfo::apply)
                 .forEach(System.out::println);
     }
 }
